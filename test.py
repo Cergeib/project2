@@ -1,54 +1,48 @@
 from Bio.SeqIO import parse
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
+from Bio.SeqIO import parse
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
 
-vector = open("C:/Users/yeba/Desktop/vector.fasta")
-
+vector = open("C:/Users/yeba/Desktop/vector.fasta") #последовательность вектора
 records = parse(vector, "fasta")
 for record in records:
-#   print("Id: %s" % record.id)
-#   print("Name: %s" % record.name)
-#   print("Description: %s" % record.description)
-#   print("Annotations: %s" % record.annotations)
-#   print("Sequence Data: %s" % record.seq)
     vector_sequence = record.seq
-#   print("Sequence Alphabet: %s" % record.seq.alphabet)
 
 print(vector_sequence)
 
-sequence_site = 'ааbbbb'
-
-vector = 'cсссссссааааааааааааааааааааbbbbbbbbbbbbbbbbbbbbbaaacaaabbbbbbbbbbbbbbbbaaabbbbaaaсссссссаааааааааа'
-
-insertion_sequence = "аааааааасссссссаааааааааааааааааbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaaa" # последовательность вставок
-
-insert_set = ['aacccc', 'bbbbbb', 'ааbbbb', 'аааааа', 'аасссс', 'сссааа', 'аааааа', 'аааааа', 'ааbbbb'] #набор вставок
-
-res = ' '.join([insertion_sequence[i:i+6] for i in range(0, len(insertion_sequence), 6)]) if ' ' not in insertion_sequence[:6] and len(insertion_sequence) > 6 else insertion_sequence
-# # делим набор символов в строке по 6шт пробелами,
-# # для получения служебного знака, чтобы по нему поделить строку на списки
-sort_order = (res.split(' '))
-# сделали список
-
-print(sort_order)
-
-new_insert_sequence = []
-
-for i in sort_order:
- if i in insert_set:
-  new_insert_sequence.append(i)
- else:
-  break
+vstavki = []
+vst = open("C:/Users/yeba/Desktop/vstavki.txt", 'r') #открываем файл со вставками (3 шт)
+vstavki = map(str.strip, vst.readlines())
+#дальше сшиваем вставки в одну (строчки Сережи)
+new_insert_sequence = ''.join(vstavki)
 print(new_insert_sequence)
-# сортировать по другому списку (вставки выстроены в необходимой последовательности)
 
-new_insert_sequence = ''.join(new_insert_sequence)
-print(new_insert_sequence)
-# склеиваем вставки
+#открываем файл с сайтами рестрикции
+sites1 = open("C:/Users/yeba/Desktop/resrtr.txt", 'r')
+sites = [i for i in sites1.read().splitlines() if i] #получаем список с сайтами
+print(sites)
 
-a, b = vector.split(sequence_site)
-result = a+sequence_site+new_insert_sequence+b
+#теперь ищем сайты рестрикций в векторе
+good_sites = []
+list_of_index = []
+for i in sites:
+    if i in vector_sequence:
+        good_sites.append(i) #добавляем в список гуд_сайтс сайты, которые есть в векторе
+        list_of_index.append(vector_sequence.find(i)) #и находим их индекс и добавляем его в лист оф индекс. из этого можно сделать потом словарь
+print(good_sites)
+print(list_of_index)
+
+#теперь берем первый попавшийся сайт рестриции (пока что) и туда вставляем вставку(команды Сережи)
+a, b = vector_sequence.split(good_sites[0])
+result = a+good_sites[0][0:3]+new_insert_sequence+good_sites[0][3:] + b
 print(result)
 #режет по концу сайта рестрикции
 #вставляет последовательность
+
+
+vector.close()
+vst.close()
+sites1.close()
 
