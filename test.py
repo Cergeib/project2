@@ -1,9 +1,6 @@
 from Bio.SeqIO import parse
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
-from Bio.SeqIO import parse
-from Bio.SeqRecord import SeqRecord
-from Bio.Seq import Seq
 
 vector = open("C:/Users/yeba/Desktop/vector.fasta") #последовательность вектора
 records = parse(vector, "fasta")
@@ -38,7 +35,7 @@ print(list_of_index)
 a, b = vector_sequence.split(good_sites[0])
 result = a+good_sites[0][0:3]+new_insert_sequence+good_sites[0][3:] + b
 print(result)
-#режет по концу сайта рестрикции
+#режет поcле 3 нуклеотида сайта рестрикции
 #вставляет последовательность
 
 
